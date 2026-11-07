@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kas Kelas XI IPS 1</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-12">
+
+    <!-- Header -->
+    <header class="bg-indigo-600 shadow-lg p-5 rounded-b-3xl mb-6">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-wide text-white">Kas Kelas XI IPS 1</h1>
+                <p class="text-xs text-indigo-200 mt-0.5">Sistem Monitoring & Catatan Kas</p>
+            </div>
+            <button onclick="alert('Sistem Kas Kelas XI IPS 1 - Siap Dipresentasikan!')" class="bg-indigo-500/50 p-2.5 rounded-xl hover:bg-indigo-500 transition shadow-inner">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 space-y-5">
+        <!-- Kartu Total Saldo -->
+        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-3xl shadow-xl relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+            <p class="text-xs font-medium text-blue-100 uppercase tracking-wider">Total Saldo Kas</p>
+            <h2 id="totalSaldo" class="text-3xl font-extrabold mt-1 text-white">Rp 0</h2>
+            
+            <div class="grid grid-cols-2 gap-4 mt-5 pt-4 border-t border-white/20">
+                <div>
+                    <p class="text-[11px] text-blue-200 uppercase">Pemasukan</p>
+                    <p id="totalPemasukan" class="text-sm font-bold text-emerald-300">Rp 0</p>
+                </div>
+                <div>
+                    <p class="text-[11px] text-blue-200 uppercase">Pengeluaran</p>
+                    <p id="totalPengeluaran" class="text-sm font-bold text-rose-300">Rp 0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tombol Aksi Cepat (Pemasukan & Pengeluaran) -->
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="bukaModalTransaksi('pemasukan')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
+                <span>➕ Pemasukan</span>
+            </button>
+            <button onclick="bukaModalTransaksi('pengeluaran')" class="bg-rose-600 hover:bg-rose-500 text-white font-semibold py-3.5 px-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 transition active:scale-95">
+                <span>➖ Pengeluaran</span>
+            </button>
+        </div>
+
+        <!-- Tombol Menu Navigasi (Riwayat & Status Siswa) -->
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="gantiTab('riwayat')" id="btnTabRiwayat" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-3 px-4 rounded-2xl border border-slate-700 text-sm transition shadow">
+                📜 Riwayat
+            </button>
+            <button onclick="gantiTab('siswa')" id="btnTabSiswa" class="bg-indigo-600 text-white font-medium py-3 px-4 rounded-2xl text-sm transition shadow">
+                👥 Status Siswa
+            </button>
+        </div>
+
+        <!-- Konten Tab: Daftar Siswa -->
+        <div id="sectionSiswa" class="bg-slate-800/80 backdrop-blur border border-slate-700/50 p-5 rounded-3xl shadow-lg space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-base text-slate-200">Daftar Siswa XI IPS 1</h3>
+                <button onclick="bukaModalSiswa()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold py-2 px-3.5 rounded-xl transition shadow">
+                    + Tambah Nama
+                </button>
+            </div>
+            
+            <div id="listSiswa" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                <p class="text-xs text-slate-400 text-center py-4">Belum ada nama siswa. Silakan klik "+ Tambah Nama".</p>
+            </div>
+        </div>
+
+        <!-- Konten Tab: Riwayat Transaksi (Hidden Awalnya) -->
+        <div id="sectionRiwayat" class="bg-slate-800/80 backdrop-blur border border-slate-700/50 p-5 rounded-3xl shadow-lg space-y-4 hidden">
+            <h3 class="font-bold text-base text-slate-200">Riwayat Kas Masuk & Keluar</h3>
+            <div id="listRiwayat" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                <p class="text-xs text-slate-400 text-center py-4">Belum ada riwayat transaksi.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Transaksi -->
+    <div id="modalTransaksi" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-sm p-6 rounded-3xl shadow-2xl space-y-4">
+            <h3 id="modalTitle" class="text-lg font-bold text-white">Tambah Transaksi</h3>
+            <input type="text" id="ketTransaksi" placeholder="Keterangan (Cth: Kas Minggu ke-1)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <input type="number" id="jmlTransaksi" placeholder="Nominal (Rp)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <div class="flex gap-2 pt-2">
+                <button onclick="tutupModalTransaksi()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2.5 rounded-xl text-sm font-medium transition">Batal</button>
+                <button onclick="simpanTransaksi()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-sm font-medium transition">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Siswa -->
+    <div id="modalSiswa" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-sm p-6 rounded-3xl shadow-2xl space-y-4">
+            <h3 class="text-lg font-bold text-white">Tambah Nama Siswa</h3>
+            <input type="text" id="namaSiswaInput" placeholder="Nama Lengkap Siswa" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-indigo-500">
+            <div class="flex gap-2 pt-2">
+                <button onclick="tutupModalSiswa()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2.5 rounded-xl text-sm font-medium transition">Batal</button>
+                <button onclick="simpanSiswa()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-xl text-sm font-medium transition">Tambah</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script JavaScript Interaktif -->
+    <script>
+        let saldoTotal = 0;
+        let totalMasuk = 0;
+        let totalKeluar = 0;
+        let jenisAktif = 'pemasukan';
+        let daftarSiswa = [];
+        let riwayatTransaksi = [];
+
+        function formatRupiah(angka) {
+            return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function gantiTab(tab) {
+            let sSiswa = document.getElementById('sectionSiswa');
+            let sRiwayat = document.getElementById('sectionRiwayat');
+            let bSiswa = document.getElementById('btnTabSiswa');
+            let bRiwayat = document.getElementById('btnTabRiwayat');
+
+            if(tab === 'siswa') {
+                sSiswa.classList.remove('hidden');
+                sRiwayat.classList.add('hidden');
+                bSiswa.className = "bg-indigo-600 text-white font-medium py-3 px-4 rounded-2xl text-sm transition shadow";
+                bRiwayat.className = "bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-3 px-4 rounded-2xl border border-slate-700 text-sm transition shadow";
+            } else {
+                sSiswa.classList.add('hidden');
+                sRiwayat.classList.remove('hidden');
+                bRiwayat.className = "bg-indigo-600 text-white font-medium py-3 px-4 rounded-2xl text-sm transition shadow";
+                bSiswa.className = "bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-3 px-4 rounded-2xl border border-slate-700 text-sm transition shadow";
+            }
+        }
+
+        function bukaModalTransaksi(jenis) {
+            jenisAktif = jenis;
+            document.getElementById('modalTitleinnerText', jenis === 'pemasukan' ? 'Tambah Pemasukan Kas' : 'Tambah Pengeluaran Kas');
+            document.getElementById('modalTitle').innerText = jenis === 'pemasukan' ? 'Tambah Pemasukan Kas' : 'Tambah Pengeluaran Kas';
+            document.getElementById('modalTransaksi').classList.remove('hidden');
+            document.getElementById('modalTransaksi').classList.add('flex');
+        }
+
+        function tutupModalTransaksi() {
+            document.getElementById('modalTransaksi').classList.add('hidden');
+            document.getElementById('modalTransaksi').classList.remove('flex');
+            document.getElementById('ketTransaksi').value = '';
+            document.getElementById('jmlTransaksi').value = '';
+        }
+
+        function simpanTransaksi() {
+            let ket = document.getElementById('ketTransaksi').value;
+            let jml = parseInt(document.getElementById('jmlTransaksi').value);
+
+            if(!ket || isNaN(jml) || jml <= 0) {
+                alert('Mohon isi keterangan dan nominal dengan benar!');
+                return;
+            }
+
+            if(jenisAktif === 'pemasukan') {
+                totalMasuk += jml;
+                saldoTotal += jml;
+            } else {
+                if(jml > saldoTotal) {
+                    alert('Saldo kas tidak mencukupi untuk pengeluaran ini!');
+                    return;
+                }
+                totalKeluar += jml;
+                saldoTotal -= jml;
+            }
+
+            riwayatTransaksi.unshift({ ket, jml, jenis: jenisAktif });
+
+            document.getElementById('totalSaldo').innerText = formatRupiah(saldoTotal);
+            document.getElementById('totalPemasukan').innerText = formatRupiah(totalMasuk);
+            document.getElementById('totalPengeluaran').innerText = formatRupiah(totalKeluar);
+
+            renderRiwayat();
+            tutupModalTransaksi();
+        }
+
+        function bukaModalSiswa() {
+            document.getElementById('modalSiswa').classList.remove('hidden');
+            document.getElementById('modalSiswa').classList.add('flex');
+        }
+
+        function tutupModalSiswa() {
+            document.getElementById('modalSiswa').classList.add('hidden');
+            document.getElementById('modalSiswa').classList.remove('flex');
+            document.getElementById('namaSiswaInput').value = '';
+        }
+
+        function simpanSiswa() {
+            let nama = document.getElementById('namaSiswaInput').value.trim();
+            if(!nama) {
+                alert('Nama siswa tidak boleh kosong!');
+                return;
+            }
+
+            daftarSiswa.push(nama);
+            renderSiswa();
+            tutupModalSiswa();
+        }
+
+        function renderSiswa() {
+            let container = document.getElementById('listSiswa');
+            if(daftarSiswa.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Belum ada nama siswa. Silakan klik "+ Tambah Nama".</p>`;
+                return;
+            }
+
+            let html = '';
+            daftarSiswa.forEach((siswa, index) => {
+                html += `
+                    <div class="flex justify-between items-center bg-slate-900/60 p-3.5 rounded-2xl border border-slate-700/40">
+                        <span class="text-sm font-medium text-white">${index + 1}. ${siswa}</span>
+                        <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-lg font-medium">Aktif</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderRiwayat() {
+            let container = document.getElementById('listRiwayat');
+            if(riwayatTransaksi.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Belum ada riwayat transaksi.</p>`;
+                return;
+            }
+
+            let html = '';
+            riwayatTransaksi.forEach(item => {
+                let warna = item.jenis === 'pemasukan' ? 'text-emerald-300 bg-emerald-500/10' : 'text-rose-300 bg-rose-500/10';
+                let tanda = item.jenis === 'pemasukan' ? '+' : '-';
+                html += `
+                    <div class="flex justify-between items-center bg-slate-900/60 p-3.5 rounded-2xl border border-slate-700/40">
+                        <div>
+                            <p class="text-sm font-medium text-white">${item.ket}</p>
+                            <span class="text-[10px] uppercase font-semibold tracking-wider text-slate-400">${item.jenis}</span>
+                        </div>
+                        <span class="text-xs font-bold ${warna} px-2.5 py-1.5 rounded-xl">${tanda} ${formatRupiah(item.jml)}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
